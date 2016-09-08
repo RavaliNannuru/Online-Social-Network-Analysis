@@ -146,7 +146,6 @@ def get_friends(twitter, screen_name):
     for r in request:
         uid.append(r)
     return sorted(uid)
-    pass
 
 
 def add_all_friends(twitter, users):
@@ -208,7 +207,6 @@ def count_friends(users):
         userlist+=i['friends']
     count= Counter(userlist)
     return count 
-    pass
 
 
 def friend_overlap(users):
@@ -236,10 +234,9 @@ def friend_overlap(users):
     userslist =[]
     for i in range(len(users)):
         for j in range(i+1,len(users)):
-            Userslist.append((users[i]['screen_name'],users[j]['screen_name'],len(set(users[i]['friends']).intersection(users[j]['friends']))))
+            userslist.append((users[i]['screen_name'], users[j]['screen_name'], len(set(users[i]['friends']) & set(users[j]['friends']))))
+    userslist = sorted(userslist, key=lambda x: (-x[2], x[0], x[1]))
     return userslist
-    pass
-
 
 def followed_by_hillary_and_donald(users, twitter):
     """
@@ -256,7 +253,17 @@ def followed_by_hillary_and_donald(users, twitter):
         that is followed by both Hillary Clinton and Donald Trump.
     """
     ###TODO
-    pass
+    friends = []
+    for x in users:
+        if x['screen_name'] in ['realDonaldTrump','HillaryClinton']:
+            friends.append(x['friends'])
+	
+    common = set(friends[0]) & set(friends[1])
+	
+    request = robust_request(twitter,'users/lookup',{'user_id':common})
+    return request.json()[0]['screen_name']
+	
+	
 
 
 def create_graph(users, friend_counts):
@@ -274,8 +281,13 @@ def create_graph(users, friend_counts):
     Returns:
       A networkx Graph
     """
-    ###TODO
-    pass
+    G=nx.Graph()
+    for r in users:
+        G.add_node(r['screen_name'])
+        for l in r['friends']:
+            if friend_counts[l] > 1:
+                G.add_edge(r['screen_name'],l)
+    return G
 
 
 def draw_network(graph, users, filename):
@@ -288,8 +300,11 @@ def draw_network(graph, users, filename):
     Your figure does not have to look exactly the same as mine, but try to
     make it look presentable.
     """
-    ###TODO
-    pass
+    plt.figure()
+    plt.axis('off')
+    labels = {n: n if n in [x['screen_name'] for x in users] else '' for n in graph.nodes()}
+    nx.draw_networkx(graph, labels=labels, alpha=0.5, width=0.5, node_size=20)
+    plt.savefig(filename)
 
 
 def main():
