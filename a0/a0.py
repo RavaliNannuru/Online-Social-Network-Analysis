@@ -35,12 +35,13 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import sys
 import time
+import json
 from TwitterAPI import TwitterAPI
 
-consumer_key = 'fixme'
-consumer_secret = 'fixme'
-access_token = 'fixme'
-access_token_secret = 'fixme'
+consumer_key = 'Hi4BX6SFEBj73Kv3MsPnmuNgy'
+consumer_secret = 'CgFmAQQ7hbbSIU55BNGCt2OrWyngLeBTvMu4BuBVooNlTnWgVd'
+access_token = '773590590323822592-nZeIvwchyN1EDFV6ljNIWLedhnjxS3Q'
+access_token_secret = 'zbPjOcIoMb5UXInUqJT2xx5QHxnW8WDXgj7VHBvv4wyzc'
 
 
 # This method is done for you. Make sure to put your credentials in the file twitter.cfg.
@@ -67,6 +68,7 @@ def read_screen_names(filename):
     ['DrJillStein', 'GovGaryJohnson', 'HillaryClinton', 'realDonaldTrump']
     """
     ###TODO
+    return [line.strip('\n') for line in open(filename)]
     pass
 
 
@@ -113,6 +115,7 @@ def get_users(twitter, screen_names):
     [6253282, 783214]
     """
     ###TODO
+    return robust_request(twitter,'users/lookup',{'screen_name':screen_names})
     pass
 
 
@@ -138,6 +141,11 @@ def get_friends(twitter, screen_name):
     [695023, 1697081, 8381682, 10204352, 11669522]
     """
     ###TODO
+    uid = []
+    request = robust_request(twitter,'friends/ids',{'screen_name':screen_name,'count':5000})
+    for r in request:
+        uid.append(r)
+    return sorted(uid)
     pass
 
 
@@ -159,7 +167,11 @@ def add_all_friends(twitter, users):
     >>> users[0]['friends'][:5]
     [695023, 1697081, 8381682, 10204352, 11669522]
     """
+    
     ###TODO
+    for i in users :
+        i['friends'] = get_friends(twitter,i['screen_name'])
+    
     pass
 
 
@@ -172,6 +184,8 @@ def print_num_friends(users):
         Nothing
     """
     ###TODO
+    for i in users :
+        print('%s%d'%(i['screen_name'],len(i['friends'])))
     pass
 
 
@@ -189,6 +203,11 @@ def count_friends(users):
     [(2, 3), (3, 2), (1, 1)]
     """
     ###TODO
+    userlist=[]
+    for i in users:
+        userlist+=i['friends']
+    count= Counter(userlist)
+    return count 
     pass
 
 
@@ -204,7 +223,7 @@ def friend_overlap(users):
         be sorted in descending order of N. Ties are broken first by user1's
         screen_name, then by user2's screen_name (sorted in ascending
         alphabetical order). See Python's builtin sorted method.
-
+""
     In this example, users 'a' and 'c' follow the same 3 accounts:
     >>> friend_overlap([
     ...     {'screen_name': 'a', 'friends': ['1', '2', '3']},
@@ -214,6 +233,11 @@ def friend_overlap(users):
     [('a', 'c', 3), ('a', 'b', 2), ('b', 'c', 2)]
     """
     ###TODO
+    userslist =[]
+    for i in range(len(users)):
+        for j in range(i+1,len(users)):
+            Userslist.append((users[i]['screen_name'],users[j]['screen_name'],len(set(users[i]['friends']).intersection(users[j]['friends']))))
+    return userslist
     pass
 
 
