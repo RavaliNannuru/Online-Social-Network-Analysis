@@ -1,16 +1,80 @@
-Grade: 0.00/50.00
+Grade: 42.00/50.00
 
-1 Deduction(s):
+2 Deduction(s):
 
 --------------
-#1: 50.00 points
-Failing test: cannot import a2/a2.py
-  File "students/RavaliNannuru/a2/a2.py", line 581
+#1: 5.00 points
+Failing test: test_vectorize_2: 
+        @points=5
+        
+Traceback (most recent call last):
+  File "../assignments-sol/a2/a2_test.py", line 95, in test_vectorize_2
+    [1])
+AssertionError: Lists differ: [0, 0] != [1]
 
-    break
+First differing element 0:
+0
+1
 
-        ^
+First list contains 1 additional elements.
+First extra element 1:
+0
 
-SyntaxError: 'break' outside loop
+- [0, 0]
++ [1]
+
+source:
+    def test_vectorize_2(self):
+         """
+         @points=5
+         """
+         docs = ["Isn't this movie great?", "Horrible, horrible movie"]
+         tokens_list = [tokenize(d) for d in docs]
+         feature_fns = [token_features]
+         X, vocab = vectorize(tokens_list, feature_fns, min_freq=2)
+         self.assertListEqual(list(X.toarray()[0]),
+                              [1])
+         self.assertListEqual(list(X.toarray()[1]),
+                              [1])
+         self.assertListEqual(sorted(vocab.items(), key=lambda x: x[1]),
+                              [('token=movie', 0)])
+--------------
+
+--------------
+#2: 3.00 points
+Failing test: test_classify_2: 
+        @points=3
+        
+Traceback (most recent call last):
+  File "../assignments-sol/a2/a2_test.py", line 129, in test_classify_2
+    [2,3])
+  File "students/RavaliNannuru/a2/a2.py", line 395, in eval_all_combinations
+    cvalid = cross_validation_accuracy(LogisticRegression(), vectorize(pun_tokens[pun], feats, freq)[0], labels, 5)
+  File "students/RavaliNannuru/a2/a2.py", line 332, in cross_validation_accuracy
+    clf.fit(X[train_ind], labels[train_ind])
+  File "/Users/awculott/.local/lib/python3.5/site-packages/scipy/sparse/csr.py", line 297, in __getitem__
+    P = extractor(row, self.shape[0])     # [[1,2],j] or [[1,2],1:2]
+  File "/Users/awculott/.local/lib/python3.5/site-packages/scipy/sparse/csr.py", line 251, in extractor
+    (min_indx,max_indx) = check_bounds(indices,N)
+  File "/Users/awculott/.local/lib/python3.5/site-packages/scipy/sparse/csr.py", line 237, in check_bounds
+    raise IndexError('index (%d) out of range' % max_indx)
+IndexError: index (7) out of range
+
+source:
+    def test_classify_2(self):
+         """
+         @points=3
+         """
+         docs = np.array(["Isn't this movie great?", "Horrible, horrible movie",
+                          "Isn't this movie great?", "Horrible, horrible movie",
+                          'i LOVE this great movie', 'i LOVE this wonderful movie',
+                          'i hate this bad movie', 'i hate this horrible movie'])
+         labels = np.array([1, 0, 1, 0, 1, 1, 0, 0])
+         feature_fns = [token_features]
+         feature_fns = [token_features, lexicon_features]
+         results = eval_all_combinations(docs, labels, [True, False],
+                                         feature_fns,
+                                         [2,3])
+         self.assertEqual(len(results), 12)
 --------------
 
