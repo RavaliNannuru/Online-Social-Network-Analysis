@@ -1,0 +1,22 @@
+Collect.py:
+	I have collected friends of users( to friends.txt where users are kept in
+ candidates.txt file and used in collect.py
+
+Then I've collected 1000 tweets from twitter API filtering by their location=US and their
+user name should match with the names in US census names, where I'm going to use these
+tweets in classify.py(saved using pickle)
+
+Cluster.py: 
+	I am using recursive girvan-newman algorithm to cluster the nodes into communities. I have around
+19,000 nodes and 20,000 edges. so i used min_degree to get nodes which have minimum degree=3
+then i got nodes around 250 and 1000 edges which saved time to built community
+
+classify.py:
+	I'm doing gender classification in this from the 1000 tweets collected and finding 
+prediction accuracy for classification i did, its about 62% for the data i collected and varies
+for different data and for different combination of the parameters passing while tokenizing the tweet.
+
+summarize.py:
+	Here I'm running all the 3 above python files at once and retreiving global values that i initialized
+in the 3 functions and storing in summary.txt file
+
