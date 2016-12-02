@@ -577,8 +577,8 @@ def print_top_misclassified(test_docs, test_labels, X_test, clf, n):
             print("truth=" + str(res.get("true")), "predicted=" + str(res.get("Preditced")), "proba=" + str(res.get("probablity")))
             print(res.get("document"))
             i += 1
-    else:
-        break
+        else:
+            break
 
 
 def main():
